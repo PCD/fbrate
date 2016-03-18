@@ -1,0 +1,6 @@
+<?php
+  include_once('inc/permissions.inc');
+  include_once('inc/facebook/autoload.php');
+  include_once('inc/menu.inc');
+  include_once('inc/data.inc');
+  //require_once __DIR__ . 'inc/facebook/autoload.php';
