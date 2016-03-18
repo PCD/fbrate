@@ -1,0 +1,5 @@
+name = Fbrate api 
+description = Crea una api para hacer manejar las peticiones a fecebook. 
+core = 7.x
+package = fbrate
+configure = admin/config/fbrate/api
