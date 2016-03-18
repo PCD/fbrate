@@ -1,0 +1,130 @@
+<?php
+/**
+ * Implements hook_schema.
+ */
+function fbrate_schema() {
+  $schema['fbrate_post'] = array(
+    'description' => 'This table stores a fb post data.', 
+    'fields' => array(
+      'fbrate_post_id' => array(
+        'description' => 'The primary identifier for fbrate post entry.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ), 
+      'timestamp' => array(
+        'description' => 'The time this post was registered.', 
+        'type' => 'int', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE, 
+      ), 
+      'status' => array(
+        'description' => 'The fbrate entry status.', 
+        'type' => 'int', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE, 
+      ), 
+      'fb_id' => array(
+        'description' => 'The FB Post id.', 
+        'type' => 'varchar', 
+        'length' => 255, 
+        'not null' => TRUE, 
+      ), 
+      'date' => array(
+        'description' => 'The FB Post date.', 
+        'type' => 'int', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE, 
+      ), 
+      'url' => array(
+        'description' => 'The FB Post URL.', 
+        'type' => 'varchar', 
+        'length' => 255, 
+        'not null' => TRUE, 
+      ), 
+      'last_sync' => array(
+        'description' => 'The FB Post Last Timestamp it was synced.', 
+        'type' => 'int', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE, 
+      ), 
+      'last_comment' => array(
+        'description' => 'The FB Post Last Timestamp it was commented.', 
+        'type' => 'int', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE, 
+      ), 
+      'last_update' => array(
+        'description' => 'The FB Post Last Timestamp it was updated.', 
+        'type' => 'int', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE, 
+      ), 
+      'raw' => array(
+        'description' => 'The FB Post raw object.', 
+        'type' => 'blob', 
+      ), 
+    ), 
+    'primary key' => array('fbrate_post_id'), 
+  );
+  
+  $schema['fbrate_comment'] = array(
+    'description' => 'This table stores a fb post comment data.', 
+    'fields' => array(
+      'fbrate_comment_id' => array(
+        'description' => 'The primary identifier for fbrate comment entry.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ), 
+      'fbrate_post_id' => array(
+        'description' => 'The fbrate post id.', 
+        'type' => 'int', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE, 
+      ), 
+      'timestamp' => array(
+        'description' => 'The time this comment was registered.', 
+        'type' => 'int', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE, 
+      ), 
+      'status' => array(
+        'description' => 'The fbrate comment status.', 
+        'type' => 'int', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE, 
+      ), 
+      'fb_id' => array(
+        'description' => 'The FB comment id.', 
+        'type' => 'varchar', 
+        'length' => 255, 
+        'not null' => TRUE, 
+      ), 
+      'date' => array(
+        'description' => 'The FB comment date.', 
+        'type' => 'int', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE, 
+      ), 
+      'updated' => array(
+        'description' => 'The FB comment Timestamp it was updated.', 
+        'type' => 'int', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE, 
+      ), 
+      'raw' => array(
+        'description' => 'The FB comment raw object.', 
+        'type' => 'blob', 
+      ), 
+    ), 
+    'primary key' => array('fbrate_comment_id'), 
+    'foreign keys' => array(
+      'fbrate_post' => array(
+        'table' => 'fbrate_post', 
+        'columns' => array('fbrate_post_id' => 'fbrate_post_id'), 
+      ), 
+    ), 
+  );
+  return $schema;
+}

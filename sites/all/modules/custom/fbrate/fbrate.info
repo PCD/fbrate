@@ -1,0 +1,8 @@
+name = FB Rate
+description = "Allows rating on comments."
+package = FB Rate
+core = 7.x
+;configure = admin/config/system/globalredirect
+version = "7.x-1.0"
+core = "7.x"
+project = "fbrate"
