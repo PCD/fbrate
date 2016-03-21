@@ -2,3 +2,5 @@
 include_once('inc/fbapi.inc');
 include_once('inc/form.inc');
 include_once('inc/menu.inc');
+include_once('inc/permission.inc');
+include_once('inc/utils.inc');
