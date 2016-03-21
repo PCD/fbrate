@@ -27,8 +27,19 @@ function fbrate_fbapi_fetch_post($url) {
   $request = $fb->request('GET', "/{$fb_id}", array('fields'=>$post_fields), $accessToken);
   $response = $fb->getClient()->sendRequest($request);
   $graphNode = $response->getGraphNode();
+  
+  // Get Likes Count
+  $likes_fields = fbrate_api_get_post_likes_fields();
+  $request = $fb->request('GET', "/{$fb_id}/likes?summary=1", array('fields'=>$likes_fields), $accessToken);
+  $response = $fb->getClient()->sendRequest($request);
+  
+  $likesGraphObject = $response->getGraphEdge();
+  $metaData = $likesGraphObject->getMetaData();
+  $graphNode['total_likes'] = $metaData['summary']['total_count'];
+  
   return $graphNode;
 }
+
 
 /**
  * Get FB Login URL.
@@ -149,6 +160,9 @@ function fbrate_api_get_post_fields() {
   return 'id, from, created_time, updated_time, images, picture, link, name, likes';
 }
 
+function fbrate_api_get_post_likes_fields() {
+  return 'total_count';
+}
 
 
 

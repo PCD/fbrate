@@ -30,8 +30,23 @@ function fbrate_fb_post_node_save($url, $graphNode) {
     drupal_goto('admin/fbrate/import/post');
     exit;
   }
-  
-  drupal_set_message("Se ha importado el post exitosamente.");
-  drupal_goto("node/{$node->nid}");
-  exit;
+  return $node;
+}
+
+/**
+ * Updates a Node FB Post.
+ */
+function fbrate_fb_post_node_update($node, $graphNode) {
+  $node->title = substr($graphNode['name'], 0, 64);
+  //$node->field_publication_date[LANGUAGE_NONE][0]['value'] = date('Y-m-d', $raw['date']);
+  $node->body[LANGUAGE_NONE][0]['value'] = $graphNode['name'];
+  $node->body[LANGUAGE_NONE][0]['format'] = 'filtered_html';
+  $node->body[LANGUAGE_NONE][0]['safe_value'] = check_markup($graphNode['name'], 'filtered_html');
+  $node->field_fb_graph_node[LANGUAGE_NONE][0]['value'] = serialize($graphNode);
+  $node->field_fb_graph_node[LANGUAGE_NONE][0]['format'] = 'filtered_html';
+  $node->field_fb_graph_node[LANGUAGE_NONE][0]['safe_value'] = check_markup(serialize($graphNode), 'filtered_html');
+  global $user;
+  $node->log = "Refrescado por usuario {$user->name}.";
+  node_save($node);
+  return $node;
 }

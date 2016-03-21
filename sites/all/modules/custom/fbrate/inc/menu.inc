@@ -22,6 +22,15 @@ function fbrate_menu() {
     'access arguments' => array('Connect with Facebook'), 
     'type' => MENU_CALLBACK, 
   );
+  $items['node/%node/fbrefresh'] = array(
+    'title' => 'Refrescar', 
+    'page callback' => 'fbrate_menu_fb_refresh', 
+    'page arguments' => array(1), 
+    'access arguments' => array('Use import post form'), 
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE, 
+    'type' => MENU_LOCAL_TASK, 
+    'weight' => 2,
+  );
   return $items;
 }
 
@@ -54,3 +63,12 @@ function fbrate_menu_import_post_form() {
   return drupal_render($form);
 }
 
+function fbrate_menu_fb_refresh($node) {
+  $url = $node->field_fb_post_url[LANGUAGE_NONE][0]['url'];
+  if ( ($graphNode = fbrate_fbapi_fetch_post($url)) ) {
+    fbrate_fb_post_node_update($node, $graphNode);
+    drupal_set_message("Se ha refrescado el post exitosamente.");
+    drupal_goto("node/{$node->nid}");
+    exit;
+  }
+}
