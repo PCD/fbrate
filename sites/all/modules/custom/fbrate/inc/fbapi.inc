@@ -30,7 +30,8 @@ function fbrate_fbapi_fetch_post($url) {
   
   // Get Likes Count
   $likes_fields = fbrate_api_get_post_likes_fields();
-  $request = $fb->request('GET', "/{$fb_id}/likes?summary=1", array('fields'=>$likes_fields), $accessToken);
+  $config = array('summary'=>1, 'fields' => $likes_fields);
+  $request = $fb->request('GET', "/{$fb_id}/likes?summary=1", $config, $accessToken);
   $response = $fb->getClient()->sendRequest($request);
   $likesGraphObject = $response->getGraphEdge();
   $metaData = $likesGraphObject->getMetaData();
@@ -39,12 +40,25 @@ function fbrate_fbapi_fetch_post($url) {
   // Get Comments
   $comments_fields = fbrate_api_get_post_comments_fields();
   $config = array('limit'=>100, 'summary'=>1, 'filter'=>'stream', 'fields'=>$comments_fields);
-  $request = $fb->request('GET', "/{$fb_id}/comments?summary=1", $config, $accessToken);
+  $request = $fb->request('GET', "/{$fb_id}/comments", $config, $accessToken);
   $response = $fb->getClient()->sendRequest($request);
   $commentsGraphObject = $response->getGraphEdge();
   $metaData = $commentsGraphObject->getMetaData();
   $graphNode['total_comments'] = $metaData['summary']['total_count'];
-  $graphNode['comments'] = $commentsGraphObject;
+  return $graphNode;
+  
+  $comments = array();
+  $comment_fields = fbrate_api_get_post_comment_fields();
+  $config = array('fields'=>$comment_fields);
+  $i = 1;
+  foreach($commentsGraphObject as $commentGraphObject) {
+    $fb_comment_id = $commentGraphObject['id'];
+    $request = $fb->request('GET', "/{$fb_comment_id}", $config, $accessToken);
+    $response = $fb->getClient()->sendRequest($request);
+    $comments[] = $response->getGraphNode();
+    $i++;
+  }
+  $graphNode['comments'] = $comments;
   
   return $graphNode;
 }
@@ -178,7 +192,9 @@ function fbrate_api_get_post_comments_fields() {
   return 'order, total_count';
 }
 
-
+function fbrate_api_get_post_comment_fields() {
+  return 'id, attachment, created_time, from, like_count, message, parent';
+}
 
 
 

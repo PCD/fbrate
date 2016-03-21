@@ -1,6 +1,4 @@
 <?php
-require_once drupal_get_path('module', 'fbrate') . '/vendor/autoload.php';
-$graphNode = unserialize($variables['field_fb_graph_node'][0]['value']);
 if ( isset($_GET['debug_fb']) ) {
   print_r($graphNode);
   exit;
@@ -52,6 +50,18 @@ $total_comments = $graphNode['total_comments'];
   <div class="total_comments">
     <?php print number_format($total_comments);?> Comentarios
   </div>
+  
+  <?php if (!empty($comments)):?>
+  <div class="comments">
+    <?php foreach($comments as $comment):?>
+    <div class="comment-item" id="comment-item-<?php print $comment['id'];?>">
+      <div class="body">
+        <?php print $comment['message'];?>
+      </div>
+    </div>
+    <?php endforeach;?>
+  </div>
+  <?php endif;?>
   <?php endif;?>
 </<?php print $ds_content_wrapper ?>>
 

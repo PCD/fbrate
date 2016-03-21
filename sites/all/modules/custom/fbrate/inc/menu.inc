@@ -66,7 +66,7 @@ function fbrate_menu_import_post_form() {
 function fbrate_menu_fb_refresh($node) {
   $url = $node->field_fb_post_url[LANGUAGE_NONE][0]['url'];
   if ( ($graphNode = fbrate_fbapi_fetch_post($url)) ) {
-    fbrate_fb_post_node_update($node, $graphNode);
+    fbrate_fb_post_node_save($graphNode);
     drupal_set_message("Se ha refrescado el post exitosamente.");
     drupal_goto("node/{$node->nid}");
     exit;

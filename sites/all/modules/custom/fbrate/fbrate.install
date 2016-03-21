@@ -6,9 +6,9 @@ function fbrate_schema() {
   $schema['fbrate_post'] = array(
     'description' => 'This table stores a fb post data.', 
     'fields' => array(
-      'fbrate_post_id' => array(
+      'nid' => array(
         'description' => 'The primary identifier for fbrate post entry.',
-        'type' => 'serial',
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ), 
@@ -47,25 +47,34 @@ function fbrate_schema() {
         'type' => 'int', 
         'unsigned' => TRUE, 
         'not null' => TRUE, 
+        'default' => 0, 
       ), 
       'last_comment' => array(
         'description' => 'The FB Post Last Timestamp it was commented.', 
         'type' => 'int', 
         'unsigned' => TRUE, 
         'not null' => TRUE, 
+        'default' => 0, 
       ), 
       'last_update' => array(
         'description' => 'The FB Post Last Timestamp it was updated.', 
         'type' => 'int', 
         'unsigned' => TRUE, 
         'not null' => TRUE, 
+        'default' => 0, 
       ), 
       'raw' => array(
         'description' => 'The FB Post raw object.', 
         'type' => 'blob', 
       ), 
     ), 
-    'primary key' => array('fbrate_post_id'), 
+    'primary key' => array('nid'), 
+    'foreign keys' => array(
+      'nid' => array(
+        'table' => 'node', 
+        'columns' => array('nid' => 'nide'), 
+      ), 
+    ), 
   );
   
   $schema['fbrate_comment'] = array(
@@ -77,7 +86,7 @@ function fbrate_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ), 
-      'fbrate_post_id' => array(
+      'nid' => array(
         'description' => 'The fbrate post id.', 
         'type' => 'int', 
         'unsigned' => TRUE, 
@@ -112,6 +121,7 @@ function fbrate_schema() {
         'type' => 'int', 
         'unsigned' => TRUE, 
         'not null' => TRUE, 
+        'default' => 0, 
       ), 
       'raw' => array(
         'description' => 'The FB comment raw object.', 
@@ -120,9 +130,9 @@ function fbrate_schema() {
     ), 
     'primary key' => array('fbrate_comment_id'), 
     'foreign keys' => array(
-      'fbrate_post' => array(
-        'table' => 'fbrate_post', 
-        'columns' => array('fbrate_post_id' => 'fbrate_post_id'), 
+      'nid' => array(
+        'table' => 'node', 
+        'columns' => array('nid' => 'nide'), 
       ), 
     ), 
   );

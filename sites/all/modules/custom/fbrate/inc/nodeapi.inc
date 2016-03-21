@@ -1,26 +1,47 @@
 <?php
 /**
+ * Loads an Existing Post Node.
+ */
+function fbrate_fb_post_node_load($graphNode) {
+  // Try by Fb Id.
+  $fb_id = $graphNode['id'];
+  if ( ($record = fbrate_data_post_load($fb_id)) && ($node=node_load($record['nid'])) ) {
+    return $node;
+  }
+  
+  // Try by URL.
+  $url = $graphNode['link'];
+  if ( ($record = fbrate_data_post_load_by_url($url)) && ($node=node_load($record['entity_id'])) ) {
+    return $node;
+  }
+  
+  return false;
+}
+
+/**
  * Creates a Node FB Post.
  */
-function fbrate_fb_post_node_save($url, $graphNode) {
+function fbrate_fb_post_node_save($graphNode) {
+  $fb_id = $graphNode['id'];
   global $user;
-  $node = new stdClass();
-  $node->type = "fb_post";
-  node_object_prepare($node);
-  $node->language = LANGUAGE_NONE;
-  $node->uid = $user->uid;
-  $node->status = 1;
-  $node->promote = 0;
+  if ( !($node = fbrate_fb_post_node_load($graphNode)) ) {
+    // New One
+    $node = new stdClass();
+    $node->type = "fb_post";
+    node_object_prepare($node);
+    $node->language = LANGUAGE_NONE;
+    $node->uid = $user->uid;
+    $node->status = 1;
+    $node->promote = 0;
+    $node->comments = 0;
+    $node->last_comment_uid = $user->uid;
+  } else {
+    $node->changed = time();
+  }
+  
   $node->title = substr($graphNode['name'], 0, 32);
   //$node->field_publication_date[LANGUAGE_NONE][0]['value'] = date('Y-m-d', $raw['date']);
-  $node->body[LANGUAGE_NONE][0]['value'] = $graphNode['name'];
-  $node->body[LANGUAGE_NONE][0]['format'] = 'filtered_html';
-  $node->body[LANGUAGE_NONE][0]['safe_value'] = check_markup($graphNode['name'], 'filtered_html');
-  
-  $node->field_fb_post_url[LANGUAGE_NONE][0]['url'] = $url;
-  $node->field_fb_graph_node[LANGUAGE_NONE][0]['value'] = serialize($graphNode);
-  $node->field_fb_graph_node[LANGUAGE_NONE][0]['format'] = 'filtered_html';
-  $node->field_fb_graph_node[LANGUAGE_NONE][0]['safe_value'] = check_markup(serialize($graphNode), 'filtered_html');
+  $node->field_fb_post_url[LANGUAGE_NONE][0]['url'] = $graphNode['link'];
   
   try{
     $node = node_submit($node);
@@ -30,23 +51,19 @@ function fbrate_fb_post_node_save($url, $graphNode) {
     drupal_goto('admin/fbrate/import/post');
     exit;
   }
+  
+  // Save Object
+  fbrate_data_post_save($node, $graphNode);
   return $node;
 }
 
 /**
- * Updates a Node FB Post.
+ * Implements hook_node_delete.
  */
-function fbrate_fb_post_node_update($node, $graphNode) {
-  $node->title = substr($graphNode['name'], 0, 64);
-  //$node->field_publication_date[LANGUAGE_NONE][0]['value'] = date('Y-m-d', $raw['date']);
-  $node->body[LANGUAGE_NONE][0]['value'] = $graphNode['name'];
-  $node->body[LANGUAGE_NONE][0]['format'] = 'filtered_html';
-  $node->body[LANGUAGE_NONE][0]['safe_value'] = check_markup($graphNode['name'], 'filtered_html');
-  $node->field_fb_graph_node[LANGUAGE_NONE][0]['value'] = serialize($graphNode);
-  $node->field_fb_graph_node[LANGUAGE_NONE][0]['format'] = 'filtered_html';
-  $node->field_fb_graph_node[LANGUAGE_NONE][0]['safe_value'] = check_markup(serialize($graphNode), 'filtered_html');
-  global $user;
-  $node->log = "Refrescado por usuario {$user->name}.";
-  node_save($node);
-  return $node;
+function fbrate_node_delete($node) {
+  switch($node->type) {
+    case 'fb_post':
+      fbrate_data_post_delete_by_nid($node->nid);
+      break;
+  }
 }
