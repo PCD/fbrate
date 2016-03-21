@@ -36,7 +36,7 @@ function fbrate_data_post_insert($node, $graphNode) {
     'timestamp' => $node->created, 
     'status' => 1, 
     'fb_id' => $graphNode['id'], 
-    'date' => strtotime($graphNode['created_time']->date), 
+    'date' => strtotime($graphNode['created_time']->format('r')), 
     'url' => $graphNode['link'], 
     'last_sync' => $node->created, 
     'last_comment' => 0, 
