@@ -7,7 +7,7 @@ function fbrate_fbapi_fetch_post($url) {
   
   global $user;
   $luser = user_load($user->uid);
-  $session = $luser->field_fb_access_token[LANGUAGE_NONE][0]['value'];
+  $accessToken = $luser->field_fb_access_token[LANGUAGE_NONE][0]['value'];
   
   // Get Credentials
   $app_id = fbrate_get_fb_app_id();
@@ -22,17 +22,14 @@ function fbrate_fbapi_fetch_post($url) {
     'app_secret' => $app_secret,
     'default_graph_version' => $app_version,
   ]);
+  fbrate_api_get_story_id_from_url($url);
   
-  $request = new FacebookRequest(
-    $session,
-    'GET',
-    '/',
-    array (
-      'id' => $url,
-    )
-  );
-  
-  print_r($request);
+  $request = $fb->request('GET', '/', array(
+    'id' => $url, 
+  ), $accessToken);
+  $response = $fb->getClient()->sendRequest($request);
+  $graphNode = $response->getGraphNode();
+  print_r($graphNode);
   exit;
   
   return 'ok';
