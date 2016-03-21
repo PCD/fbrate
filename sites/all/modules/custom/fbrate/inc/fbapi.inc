@@ -45,6 +45,28 @@ function fbrate_fbapi_fetch_post($url) {
   return 'ok';
 }
 
+/**
+ * Get FB Login URL.
+ */
+function fbrate_get_fb_login_url() {
+  // Get Credentials
+  $app_id = variable_get('fbrate_app_id', '133228943514210');
+  $app_secret = variable_get('fbrate_app_secret', '0f39ea261b13366934f35df9f4b9755b');
+  $app_version = variable_get('fbrate_app_version', 'v2.5');
+  require_once dirname(__DIR__) . '/vendor/autoload.php';
+  
+  // Get FB Object
+  $fb = new Facebook\Facebook([
+    'app_id' => $app_id,
+    'app_secret' => $app_secret,
+    'default_graph_version' => $app_version,
+  ]);
+  
+  $helper = $fb->getRedirectLoginHelper();
+  $permissions = ['email', 'user_likes'];
+  $base_url = url('fbrate/login', array('absolute'=>TRUE));
+  return $helper->getLoginUrl($base_url, $permissions);
+}
 
 
 /**

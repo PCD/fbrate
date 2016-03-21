@@ -27,7 +27,8 @@ function fbrate_menu_import_post_form() {
   global $user;
   $luser = user_load($user->uid);
   if ( !($access_token = field_fb_get_user_access_token($luser)) ) {
-    $login_link = l('Conectar con FaceBook', 'fbrate/login', array('attributes'=>array('class'=>array('fb_login'))));
+    $login_url = fbrate_get_fb_login_url();
+    $login_link = "<a href=\"{$login_url}\" class=\"fb_login\">Conectar con FaceBook</a>";
     $message = "<p>Necesitas Conectar con Facebook para usar esta función.</p><p>{$login_link}</p>";
     return $message;
   }
