@@ -22,11 +22,11 @@ function fbrate_fbapi_fetch_post($url) {
     'app_secret' => $app_secret,
     'default_graph_version' => $app_version,
   ]);
-  $fb_id = fbrate_api_get_story_id_from_url($url);
-  $post_fields = fbrate_api_get_post_fields();
-  $request = $fb->request('GET', "/{$fb_id}", array('fields'=>$post_fields), $accessToken);
-  $response = $fb->getClient()->sendRequest($request);
+  if ( !($response = fbrate_fbapi_fetch_post_type($url, 'post', $fb, $accessToken)) ) {
+    return false;
+  }
   $graphNode = $response->getGraphNode();
+  $fb_id = $graphNode['id'];
   
   // Get Likes Count
   $likes_fields = fbrate_api_get_post_likes_fields();
@@ -63,6 +63,47 @@ function fbrate_fbapi_fetch_post($url) {
   return $graphNode;
 }
 
+/**
+ *
+ */
+function fbrate_fbapi_fetch_post_type($url, $type = 'post', $fb, $accessToken) {
+  switch($type) {
+    case 'post':
+      // Get FB Object
+      if ( !($fb_id = fbrate_api_get_story_id_from_url($url)) ) {
+        return false;
+      }
+      $post_fields = fbrate_api_get_post_fields();
+      try{
+        $request = $fb->request('GET', "/{$fb_id}", array('fields'=>$post_fields), $accessToken);
+        $response = $fb->getClient()->sendRequest($request);
+        return $response;
+      } catch (Exception $e) {
+        $error_code = $e->getCode();
+        $error_message = $e->getMessage();
+        print "error_code={$error_code}\nerror_message={$error_message}\n";
+      }
+      break;
+  }
+  
+  // Check for Error
+  if ( isset($error_code) ) {
+    echo " Failed... Error Code={$error_code}";
+    switch($error_code) {
+      case '12': // This is a Status not a Post
+        drupal_set_message('Los status de usuarios no pueden ser importados, solamente los posts de paginas públicas.', 'error');
+        return false;
+        break;
+
+      default:
+        print "<p>Error Code: {$error_code}\n</p><p>Error Message: {$error_message}\n</p>";
+        exit;
+        break;
+    }
+  }
+  
+  return false;
+}
 
 /**
  * Get FB Login URL.
