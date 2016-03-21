@@ -114,14 +114,11 @@ function fbrate_menu_login() {
     exit;
   }
   
-  print_r($accessToken);
-  exit;
-  
   //$accessToken
   // Save Access Token
   global $user;
   $luser = user_load($user->uid);
-  $luser->field_fb_access_token[LANGUAGE_NONE][0]['value'] = $accessToken;
+  $luser->field_fb_access_token[LANGUAGE_NONE][0]['value'] = $accessToken->getValue();
   user_save($luser);
   
   drupal_goto('admin/fbrate/import/post');
