@@ -14,7 +14,10 @@ function field_fb_get_user_access_token($user) {
  */
 function fbrate_api_get_story_id_from_url($url) {
   $parts = parse_url($url);
-  print_r($parts);
+  $path = explode('/', trim($parts['path'], '/ '));
+  $fb_id = array_pop($path);
+  return $fb_id;
+  print_r($path);
   exit;
   parse_str($parts['query'], $query);
   if ( isset($query['story_fbid']) ) {

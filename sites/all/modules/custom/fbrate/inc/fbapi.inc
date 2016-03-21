@@ -22,17 +22,12 @@ function fbrate_fbapi_fetch_post($url) {
     'app_secret' => $app_secret,
     'default_graph_version' => $app_version,
   ]);
-  fbrate_api_get_story_id_from_url($url);
-  
-  $request = $fb->request('GET', '/', array(
-    'id' => $url, 
-  ), $accessToken);
+  $fb_id = fbrate_api_get_story_id_from_url($url);
+  $post_fields = fbrate_api_get_post_fields();
+  $request = $fb->request('GET', "/{$fb_id}", array('fields'=>$post_fields), $accessToken);
   $response = $fb->getClient()->sendRequest($request);
   $graphNode = $response->getGraphNode();
-  print_r($graphNode);
-  exit;
-  
-  return 'ok';
+  return $graphNode;
 }
 
 /**
@@ -149,6 +144,19 @@ function fbrate_fb_connect() {
   }
   return true;
 }
+
+function fbrate_api_get_post_fields() {
+  return 'id, from, created_time, updated_time, images, picture, link, name, likes';
+}
+
+
+
+
+
+
+
+
+
 
 
 

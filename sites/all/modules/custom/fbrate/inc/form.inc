@@ -24,5 +24,8 @@ function fbrate_import_post_form($form, &$form_state) {
  */
 function fbrate_import_post_form_submit(&$form, &$form_state) {
   $val = $form_state['values'];
-  fbrate_fbapi_fetch_post($val['fb_url']);
+  $url = $val['fb_url'];
+  if ( ($graphNode = fbrate_fbapi_fetch_post($url)) ) {
+    fbrate_fb_post_node_save($url, $graphNode);
+  }
 }
