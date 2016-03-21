@@ -45,15 +45,66 @@ function fbrate_fbapi_fetch_post($url) {
   return 'ok';
 }
 
+
+
 /**
- * Process FB Login.
+ * Connects User with Facebook.
  */
-function fbrate_api_menu_admin() {
+function fbrate_menu_login() {
+  // Get Credentials
+  $app_id = variable_get('fbrate_app_id', '133228943514210');
+  $app_secret = variable_get('fbrate_app_secret', '0f39ea261b13366934f35df9f4b9755b');
+  $app_version = variable_get('fbrate_app_version', 'v2.5');
+  require_once dirname(__DIR__) . '/vendor/autoload.php';
   
+  // Get FB Object
+  $fb = new Facebook\Facebook([
+    'app_id' => $app_id,
+    'app_secret' => $app_secret,
+    'default_graph_version' => $app_version,
+  ]);
+  
+  $helper = $fb->getRedirectLoginHelper();
+
+  try {
+    $accessToken = $helper->getAccessToken();
+  } catch(Facebook\Exceptions\FacebookResponseException $e) {
+    // When Graph returns an error
+    drupal_set_message('Graph returned an error: ' . $e->getMessage(), 'error');
+    return '';
+  } catch(Facebook\Exceptions\FacebookSDKException $e) {
+    // When validation fails or other local issues
+    drupal_set_message('Facebook SDK returned an error: ' . $e->getMessage(), 'error');
+    return '';
+  }
+  
+  if ( !isset($accessToken)) {
+    if ($helper->getError()) {
+      header('HTTP/1.0 401 Unauthorized');
+      echo "Error: " . $helper->getError() . "\n";
+      echo "Error Code: " . $helper->getErrorCode() . "\n";
+      echo "Error Reason: " . $helper->getErrorReason() . "\n";
+      echo "Error Description: " . $helper->getErrorDescription() . "\n";
+    } else {
+      header('HTTP/1.0 400 Bad Request');
+      echo 'Bad request';
+    }
+    exit;
+  }
+  
+  print_r($accessToken);
+  exit;
+  
+  //$accessToken
+  // Save Access Token
+  global $user;
+  $luser = user_load($user->uid);
+  $luser->field_fb_access_token[LANGUAGE_NONE][0]['value'] = $accessToken;
+  user_save($luser);
+  
+  drupal_goto('admin/fbrate/import/post');
+  exit;
 }
-
-
-
 
 
 

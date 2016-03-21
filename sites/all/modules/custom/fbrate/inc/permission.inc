@@ -8,5 +8,9 @@ function fbrate_permission() {
       'title' => 'Use import post form', 
       'description' => 'Use import post form', 
     ), 
+    'Connect with Facebook' => array(
+      'title' => 'Connect with Facebook', 
+      'description' => 'Connect with Facebook', 
+    ), 
   );
 }
