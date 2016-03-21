@@ -10,7 +10,7 @@ function fbrate_fbapi_fetch_post($url) {
   }
   
   // Get Credentials
-  $app_id = fbrate_get_fb_app_secret();
+  $app_id = fbrate_get_fb_app_id();
   $app_secret = fbrate_get_fb_app_secret();
   $app_version = fbrate_get_fb_app_version();
   require_once dirname(__DIR__) . '/vendor/autoload.php';
@@ -50,7 +50,7 @@ function fbrate_fbapi_fetch_post($url) {
  */
 function fbrate_get_fb_login_url() {
   // Get Credentials
-  $app_id = fbrate_get_fb_app_secret();
+  $app_id = fbrate_get_fb_app_id();
   $app_secret = fbrate_get_fb_app_secret();
   $app_version = fbrate_get_fb_app_version();
   require_once dirname(__DIR__) . '/vendor/autoload.php';
@@ -74,7 +74,7 @@ function fbrate_get_fb_login_url() {
  */
 function fbrate_menu_login() {
   // Get Credentials
-  $app_id = fbrate_get_fb_app_secret();
+  $app_id = fbrate_get_fb_app_id();
   $app_secret = fbrate_get_fb_app_secret();
   $app_version = fbrate_get_fb_app_version();
   require_once dirname(__DIR__) . '/vendor/autoload.php';
