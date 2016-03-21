@@ -10,9 +10,9 @@ function fbrate_fbapi_fetch_post($url) {
   }
   
   // Get Credentials
-  $app_id = variable_get('fbrate_app_id', '133228943514210');
-  $app_secret = variable_get('fbrate_app_secret', '0f39ea261b13366934f35df9f4b9755b');
-  $app_version = variable_get('fbrate_app_version', 'v2.5');
+  $app_id = fbrate_get_fb_app_secret();
+  $app_secret = fbrate_get_fb_app_secret();
+  $app_version = fbrate_get_fb_app_version();
   require_once dirname(__DIR__) . '/vendor/autoload.php';
   
   
@@ -50,9 +50,9 @@ function fbrate_fbapi_fetch_post($url) {
  */
 function fbrate_get_fb_login_url() {
   // Get Credentials
-  $app_id = variable_get('fbrate_app_id', '133228943514210');
-  $app_secret = variable_get('fbrate_app_secret', '0f39ea261b13366934f35df9f4b9755b');
-  $app_version = variable_get('fbrate_app_version', 'v2.5');
+  $app_id = fbrate_get_fb_app_secret();
+  $app_secret = fbrate_get_fb_app_secret();
+  $app_version = fbrate_get_fb_app_version();
   require_once dirname(__DIR__) . '/vendor/autoload.php';
   
   // Get FB Object
@@ -74,9 +74,9 @@ function fbrate_get_fb_login_url() {
  */
 function fbrate_menu_login() {
   // Get Credentials
-  $app_id = variable_get('fbrate_app_id', '133228943514210');
-  $app_secret = variable_get('fbrate_app_secret', '0f39ea261b13366934f35df9f4b9755b');
-  $app_version = variable_get('fbrate_app_version', 'v2.5');
+  $app_id = fbrate_get_fb_app_secret();
+  $app_secret = fbrate_get_fb_app_secret();
+  $app_version = fbrate_get_fb_app_version();
   require_once dirname(__DIR__) . '/vendor/autoload.php';
   
   // Get FB Object
@@ -128,8 +128,26 @@ function fbrate_menu_login() {
   exit;
 }
 
+/**
+ * Gets FB App ID.
+ */
+function fbrate_get_fb_app_id() {
+  return variable_get('fbrate_app_id', '1062595773813919');
+}
 
+/**
+ * Gets FB App Secret.
+ */
+function fbrate_get_fb_app_secret() {
+  return variable_get('fbrate_app_secret', '755ffc892303120f998b0d7ba9d0314a');
+}
 
+/**
+ * Gets FB App Version.
+ */
+function fbrate_get_fb_app_version() {
+  return variable_get('fbrate_app_version', 'v2.5');
+}
 
 
 
