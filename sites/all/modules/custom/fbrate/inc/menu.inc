@@ -16,13 +16,19 @@ function fbrate_menu() {
     'access arguments' => array('Connect with Facebook'), 
     'type' => MENU_CALLBACK, 
   );
+  $items['fbrate/login/process'] = array(
+    'title' => 'Login Callback', 
+    'page callback' =>'fbrate_menu_login_process', 
+    'access arguments' => array('Connect with Facebook'), 
+    'type' => MENU_CALLBACK, 
+  );
   return $items;
 }
 
 /**
- *
+ * Presents a Facebook Login Link.
  */
-function fbrate_menu_import_post_form() {
+function fbrate_menu_login() {
   // Is the logged in user logged with fb.
   global $user;
   $luser = user_load($user->uid);
@@ -31,7 +37,17 @@ function fbrate_menu_import_post_form() {
     $login_link = "<a href=\"{$login_url}\" class=\"fb_login\">Conectar con FaceBook</a>";
     $message = "<p>Necesitas Conectar con Facebook para usar esta función.</p><p>{$login_link}</p>";
     return $message;
+  } else {
+    $message = "<p>Estas Conectado con Facebook.</p>";
+    return $message;
   }
+}
+
+/**
+ * Shows a Form to Import FB Post URL.
+ */
+function fbrate_menu_import_post_form() {
+  fbrate_fb_connect();
   
   // 
   $form = drupal_get_form('fbrate_import_post_form');

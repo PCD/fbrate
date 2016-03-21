@@ -3,11 +3,11 @@
  * Fetch All post data and comments from a given FB Post URL.
  */
 function fbrate_fbapi_fetch_post($url) {
-  // Get Post ID
-  if ( !($fb_id = fbrate_api_get_story_id_from_url($url)) ) {
-    drupal_set_message(t('La URL Proporcionada es incorrecta, no es una URL de un Post.'), 'error');
-    return '';
-  }
+  fbrate_fb_connect();
+  
+  global $user;
+  $luser = user_load($user->uid);
+  $session = $luser->field_fb_access_token[LANGUAGE_NONE][0]['value'];
   
   // Get Credentials
   $app_id = fbrate_get_fb_app_id();
@@ -22,26 +22,19 @@ function fbrate_fbapi_fetch_post($url) {
     'app_secret' => $app_secret,
     'default_graph_version' => $app_version,
   ]);
-  $helper = $fb->getRedirectLoginHelper();
-  $permissions = ['email', 'user_likes'];
-  $login_url = url('fbrate/login', array('absolute'=>true));
-  $loginUrl = $helper->getLoginUrl($login_url, $permissions);
-  return '<a href="' . $loginUrl . '">Log in with Facebook!</a>';
   
-
-
-  // Get FB Access Token
-  
-  
-  /*$request = new Facebook\FacebookRequest(
-    $fbApp,
+  $request = new FacebookRequest(
+    $session,
     'GET',
-    "/{$fb_id}"
-  );*/
+    '/',
+    array (
+      'id' => $url,
+    )
+  );
   
   print_r($request);
-  exit;  
-
+  exit;
+  
   return 'ok';
 }
 
@@ -64,7 +57,7 @@ function fbrate_get_fb_login_url() {
   
   $helper = $fb->getRedirectLoginHelper();
   $permissions = ['email', 'user_likes'];
-  $base_url = url('fbrate/login', array('absolute'=>TRUE));
+  $base_url = url('fbrate/login/process', array('absolute'=>TRUE));
   return $helper->getLoginUrl($base_url, $permissions);
 }
 
@@ -72,7 +65,7 @@ function fbrate_get_fb_login_url() {
 /**
  * Connects User with Facebook.
  */
-function fbrate_menu_login() {
+function fbrate_menu_login_process() {
   // Get Credentials
   $app_id = fbrate_get_fb_app_id();
   $app_secret = fbrate_get_fb_app_secret();
@@ -146,8 +139,19 @@ function fbrate_get_fb_app_version() {
   return variable_get('fbrate_app_version', 'v2.5');
 }
 
-
-
+/**
+ * Redirects to Facebook Login if it needs to.
+ */
+function fbrate_fb_connect() {
+  // Is the logged in user logged with fb.
+  global $user;
+  $luser = user_load($user->uid);
+  if ( !($access_token = field_fb_get_user_access_token($luser)) ) {
+    drupal_goto('fbrate/login');
+    exit;
+  }
+  return true;
+}
 
 
 
