@@ -8,7 +8,7 @@ if ( isset($_GET['debug_fb']) ) {
 $from = $graphNode['from']['name'];
 $when = $graphNode['created_time']->date;
 $link = $graphNode['link'];
-$likes = $graphNode['total_likes'];
+$total_likes = $graphNode['total_likes'];
 // Get First Image if Any
 $name = check_plain($graphNode['name']);
 if ( isset($graphNode['images'][0]) ) {
@@ -16,6 +16,9 @@ if ( isset($graphNode['images'][0]) ) {
   $image = "<img src=\"{$img['source']}\" width=\"{$img['width']}\" height=\"{$img['height']}\" />";
 }
 
+
+// Comments
+$total_comments = $graphNode['total_comments'];
 
 /**
  * @file
@@ -42,8 +45,12 @@ if ( isset($graphNode['images'][0]) ) {
     <?php print $image;?>
   </div>
   
-  <div class="likes">
-    <?php print number_format($likes);?> Me Gusta
+  <div class="total_likes">
+    <?php print number_format($total_likes);?> Me Gusta
+  </div>
+  
+  <div class="total_comments">
+    <?php print number_format($total_comments);?> Comentarios
   </div>
   <?php endif;?>
 </<?php print $ds_content_wrapper ?>>

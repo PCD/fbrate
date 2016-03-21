@@ -32,10 +32,19 @@ function fbrate_fbapi_fetch_post($url) {
   $likes_fields = fbrate_api_get_post_likes_fields();
   $request = $fb->request('GET', "/{$fb_id}/likes?summary=1", array('fields'=>$likes_fields), $accessToken);
   $response = $fb->getClient()->sendRequest($request);
-  
   $likesGraphObject = $response->getGraphEdge();
   $metaData = $likesGraphObject->getMetaData();
   $graphNode['total_likes'] = $metaData['summary']['total_count'];
+  
+  // Get Comments
+  $comments_fields = fbrate_api_get_post_comments_fields();
+  $config = array('limit'=>100, 'summary'=>1, 'filter'=>'stream', 'fields'=>$comments_fields);
+  $request = $fb->request('GET', "/{$fb_id}/comments?summary=1", $config, $accessToken);
+  $response = $fb->getClient()->sendRequest($request);
+  $commentsGraphObject = $response->getGraphEdge();
+  $metaData = $commentsGraphObject->getMetaData();
+  $graphNode['total_comments'] = $metaData['summary']['total_count'];
+  $graphNode['comments'] = $commentsGraphObject;
   
   return $graphNode;
 }
@@ -157,15 +166,17 @@ function fbrate_fb_connect() {
 }
 
 function fbrate_api_get_post_fields() {
-  return 'id, from, created_time, updated_time, images, picture, link, name, likes';
+  //return 'id, from, created_time, updated_time, images, picture, link, name, likes';
+  return 'id, from, created_time, updated_time, images, link, name';
 }
 
 function fbrate_api_get_post_likes_fields() {
   return 'total_count';
 }
 
-
-
+function fbrate_api_get_post_comments_fields() {
+  return 'order, total_count';
+}
 
 
 
