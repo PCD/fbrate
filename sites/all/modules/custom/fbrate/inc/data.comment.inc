@@ -3,14 +3,12 @@
  * Saves a Comment Object.
  */
 function fbrate_data_comment_save($node, $graphNode) {
-  $fb_id = $graphNode['id'];
-  if ( !($record = fbrate_data_comment_load($fb_id)) ) {
+  if ( !($record = fbrate_data_comment_load($graphNode['id'])) ) {
     return fbrate_data_comment_insert($node->nid, $graphNode);
   }
   
   // Update
-  $fbrate_comment_id = $record['fbrate_comment_id'];
-  return fbrate_data_comment_update($fbrate_comment_id, $graphNode);
+  return fbrate_data_comment_update($record['fbrate_comment_id'], $graphNode);
 }
 
 /**
@@ -37,6 +35,28 @@ function fbrate_data_comment_load($fb_id) {
 }
 
 /**
+ * Search for an Existing comment Record.
+ */
+function fbrate_data_comment_load_by_cid($cid) {
+  return db_select('fbrate_comment', 'c')
+  ->fields('c')
+  ->condition('fbrate_comment_id', $cid, '=')
+  ->execute()
+  ->fetchAssoc();
+}
+
+/**
+ * Search for an Existing comment Record.
+ */
+function fbrate_data_comment_load_all_id_by_nid($nid) {
+  $query = db_select('fbrate_comment', 'c');
+  $query->addField('c', 'fbrate_comment_id');
+  $query->condition('nid', $nid, '=');
+  $results = $query->execute();
+  return $results->fetchAllAssoc('fbrate_comment_id');
+}
+
+/**
  * Inserts a comment Object.
  */
 function fbrate_data_comment_insert($nid, $graphNode) {
@@ -46,7 +66,7 @@ function fbrate_data_comment_insert($nid, $graphNode) {
     'timestamp' => time(), 
     'status' => 1, 
     'fb_id' => $graphNode['id'], 
-    'date' => strtotime($graphNode['created_time']->date), 
+    'date' => strtotime($graphNode['created_time']->format('r')), 
     'updated' => 0, 
     'raw' => serialize($graphNode), 
   ))

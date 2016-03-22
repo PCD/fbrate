@@ -16,7 +16,8 @@ if ( isset($graphNode['images'][0]) ) {
 
 
 // Comments
-$total_comments = $graphNode['total_comments'];
+$cids = fbrate_data_comment_load_all_id_by_nid($nid);
+$total_comments = count($cids);
 
 /**
  * @file
@@ -28,40 +29,39 @@ $total_comments = $graphNode['total_comments'];
   <?php if (isset($title_suffix['contextual_links'])): ?>
   <?php print render($title_suffix['contextual_links']); ?>
   <?php endif; ?>
-  <div class="from">
-    <?php print $from;?>
-  </div>
-  <div class="when">
-    <a href="<?php print $link;?>" target="_blank"><?php print $when;?></a>
-  </div>
-  <div class="body">
-    <?php print $name;?>
-  </div>
-  
-  <?php if (isset($image)):?>
-  <div class="image">
-    <?php print $image;?>
-  </div>
-  
-  <div class="total_likes">
-    <?php print number_format($total_likes);?> Me Gusta
-  </div>
-  
-  <div class="total_comments">
-    <?php print number_format($total_comments);?> Comentarios
-  </div>
-  
-  <?php if (!empty($comments)):?>
-  <div class="comments">
-    <?php foreach($comments as $comment):?>
-    <div class="comment-item" id="comment-item-<?php print $comment['id'];?>">
-      <div class="body">
-        <?php print $comment['message'];?>
-      </div>
+  <div class="post">
+    <div class="from">
+      <?php print $from;?>
     </div>
+    <div class="when">
+      <a href="<?php print $link;?>" target="_blank"><?php print $when;?></a>
+    </div>
+    <div class="body">
+      <?php print $name;?>
+    </div>
+    
+    <?php if (isset($image)):?>
+    <div class="image">
+      <?php print $image;?>
+    </div>
+    
+    <div class="total_likes">
+      <?php print number_format($total_likes);?> Me Gusta
+    </div>
+    
+    <div class="total_comments">
+      <?php print number_format($total_comments);?> Comentarios
+    </div>
+  </div>
+  
+  <?php if ($cids):?>
+  <div class="comments">
+    <?php foreach($cids as $item):?>
+    <div class="comment-item" id="comment-item-<?php print $item->fbrate_comment_id;?>" data-cid="<?php print $item->fbrate_comment_id;?>"></div>
     <?php endforeach;?>
   </div>
   <?php endif;?>
+  
   <?php endif;?>
 </<?php print $ds_content_wrapper ?>>
 

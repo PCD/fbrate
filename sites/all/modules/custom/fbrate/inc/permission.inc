@@ -12,5 +12,9 @@ function fbrate_permission() {
       'title' => 'Connect with Facebook', 
       'description' => 'Connect with Facebook', 
     ), 
+    'Read Post Comments' => array(
+      'title' => 'Read Post Comments', 
+      'description' => 'Read Post Comments', 
+    ), 
   );
 }

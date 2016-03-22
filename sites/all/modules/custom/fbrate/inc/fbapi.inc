@@ -64,6 +64,68 @@ function fbrate_fbapi_fetch_post($url) {
 }
 
 /**
+ * Fetch and Save All Comments of a Post.
+ */
+function fbrate_fb_post_comments_save($node, $postGraphNode) {
+  fbrate_fb_connect();
+  
+  global $user;
+  $luser = user_load($user->uid);
+  $accessToken = $luser->field_fb_access_token[LANGUAGE_NONE][0]['value'];
+  
+  // Get Credentials
+  $app_id = fbrate_get_fb_app_id();
+  $app_secret = fbrate_get_fb_app_secret();
+  $app_version = fbrate_get_fb_app_version();
+  $fb_id = $postGraphNode['id'];
+  require_once dirname(__DIR__) . '/vendor/autoload.php';
+  
+  
+  // Get FB Object
+  $fb = new Facebook\Facebook([
+    'app_id' => $app_id,
+    'app_secret' => $app_secret,
+    'default_graph_version' => $app_version,
+  ]);
+  
+  // Get Comments
+  $comments_fields = fbrate_api_get_post_comments_fields();
+  $config = array('limit'=>10, 'summary'=>1, 'filter'=>'stream', 'fields'=>$comments_fields);
+  $comment_fields = fbrate_api_get_post_comment_fields();
+  $comment_config = array('fields'=>$comment_fields);
+  $limit = 10;
+  $page = 0;
+  $offset = 0;
+  
+  // Cycle until get all.
+  do{
+    $offset = ($limit*$page);
+    $page++;
+    $config['offset'] = $offset;
+    
+    $request = $fb->request('GET', "/{$fb_id}/comments", $config, $accessToken);
+    $response = $fb->getClient()->sendRequest($request);
+    $commentsGraphObject = $response->getGraphEdge();
+    $metaData = $commentsGraphObject->getMetaData();
+    if ( $page == 1 ) {
+      $config['summary'] = 0;
+    }
+
+    
+    foreach($commentsGraphObject as $commentGraphObject) {
+      $fb_comment_id = $commentGraphObject['id'];
+      $request = $fb->request('GET', "/{$fb_comment_id}", $comment_config, $accessToken);
+      $response = $fb->getClient()->sendRequest($request);
+      $comment_raw = $response->getGraphNode();
+      // Save
+      fbrate_data_comment_save($node, $comment_raw);
+    }
+  } while(isset($metaData['paging']['next']));
+  
+  return true;
+}
+
+/**
  *
  */
 function fbrate_fbapi_fetch_post_type($url, $type = 'post', $fb, $accessToken) {
@@ -81,7 +143,8 @@ function fbrate_fbapi_fetch_post_type($url, $type = 'post', $fb, $accessToken) {
       } catch (Exception $e) {
         $error_code = $e->getCode();
         $error_message = $e->getMessage();
-        print "error_code={$error_code}\nerror_message={$error_message}\n";
+        drupal_set_message('Esta URL no puede ser usada debido a falta de permisos o bien no cumple con alguna norma de facebook para público general, este es el mensaje de error:<br/><strong>Code ' . $error_code . ': ' . $error_message . '</strong>', 'error');
+        return false;
       }
       break;
   }
@@ -96,8 +159,8 @@ function fbrate_fbapi_fetch_post_type($url, $type = 'post', $fb, $accessToken) {
         break;
 
       default:
-        print "<p>Error Code: {$error_code}\n</p><p>Error Message: {$error_message}\n</p>";
-        exit;
+        drupal_set_message('Error Desconocido, este es el mensaje de error:<br/><strong>Code ' . $error_code . ': ' . $error_message . '</strong>', 'error');
+        return false;
         break;
     }
   }

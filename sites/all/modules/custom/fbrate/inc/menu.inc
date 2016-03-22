@@ -31,6 +31,12 @@ function fbrate_menu() {
     'type' => MENU_LOCAL_TASK, 
     'weight' => 2,
   );
+  $items['fbrate/comment/%'] = array(
+    'page callback' => 'fbrate_menu_comment_load', 
+    'page arguments' => array(2), 
+    'access arguments' => array('Read Post Comments'), 
+    'type' => MENU_CALLBACK, 
+  );
   return $items;
 }
 
@@ -65,10 +71,47 @@ function fbrate_menu_import_post_form() {
 
 function fbrate_menu_fb_refresh($node) {
   $url = $node->field_fb_post_url[LANGUAGE_NONE][0]['url'];
-  if ( ($graphNode = fbrate_fbapi_fetch_post($url)) ) {
-    fbrate_fb_post_node_save($graphNode);
-    drupal_set_message("Se ha refrescado el post exitosamente.");
+  if ( !($graphNode = fbrate_fbapi_fetch_post($url)) ) {
+    drupal_set_message("No fue posible obtener nuevos datos para refrescar el post.");
     drupal_goto("node/{$node->nid}");
     exit;
   }
+  
+  if ( !($node = fbrate_fb_post_node_save($graphNode)) ) {
+    drupal_set_message("No fue posible guardar los datos al refrescar el post.");
+    drupal_goto("node/{$node->nid}");
+    exit;
+  }
+  
+  // Save Comments
+  if ( fbrate_fb_post_comments_save($node, $graphNode) ) {
+    drupal_set_message("Se han importado todos los comentarios exitosamente.");
+  }
+  
+  drupal_set_message("Se ha refrescado el post exitosamente.");
+  drupal_goto("node/{$node->nid}");
+  exit;
+}
+
+/**
+ * Loads a Comment by its ID.
+ */
+function fbrate_menu_comment_load($cid) {
+  require_once drupal_get_path('module', 'fbrate') . '/vendor/autoload.php';
+  $data = fbrate_data_comment_load_by_cid($cid);
+  $graphNode = unserialize($data['raw']);
+  $return = array(
+    'cid' => $data['fbrate_comment_id'], 
+    'id' => $graphNode['id'], 
+    'created' => $graphNode['created_time']->format('r'), 
+    'from' => $graphNode['from']['name'], 
+    'like_count' => $graphNode['like_count'], 
+    'message' => $graphNode['message'], 
+    'parent' => 0, 
+  );
+  if ( isset($graphNode['parent']) ) {
+    $return['parent'] = $graphNode['parent']['id'];
+  }
+  echo drupal_json_encode($return);
+  exit;
 }
