@@ -1,9 +1,3 @@
-/**
- * Variable Overrides.
- *
- * Modify this file to override the Bootstrap Framework variables. You can copy
- * these variables directly from ../bootstrap/less/variables.less to this file.
- */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 html {
   font-family: sans-serif;
@@ -255,8 +249,8 @@ th {
 }
 @font-face {
   font-family: 'Glyphicons Halflings';
-  src: url('../bootstrap/fonts/glyphicons-halflings-regular.eot');
-  src: url('../bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../bootstrap/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../bootstrap/fonts/glyphicons-halflings-regular.woff') format('woff'), url('../bootstrap/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+  src: url('../fonts/glyphicons-halflings-regular.eot');
+  src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 }
 .glyphicon {
   position: relative;
@@ -7540,7 +7534,12 @@ body {
   border-color: #435a8b #3c5488 #334c83;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
   background: #4e69a2;
+  background-image: linear-gradient(#4e69a2, #1748b2);
   border-radius: 2px;
+}
+.cta a:hover {
+  background: #435a8c;
+  background-image: linear-gradient(#435a8c, #133c95);
 }
 .node-fb-post.view-mode-full {
   border: 1px solid;
@@ -7550,6 +7549,13 @@ body {
 }
 .node-fb-post.view-mode-full .post {
   padding: 12px 12px 0;
+}
+.node-fb-post.view-mode-full .post .image {
+  width: 470px;
+}
+.node-fb-post.view-mode-full .post .image img {
+  max-width: 100%;
+  height: auto;
 }
 .node-fb-post.view-mode-full .comments {
   background: #f6f7f8;
@@ -7565,6 +7571,23 @@ body {
   display: table;
   height: 0;
   clear: both;
+}
+.node-fb-post.view-mode-full .comments .comment-item.child {
+  padding: 8px 0 6px 52px;
+  border-top: none;
+}
+.node-fb-post.view-mode-full .comments .comment-item.child:before {
+  content: "";
+  display: block;
+  width: 2px;
+  background: #dcdee3;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  left: 42px;
+}
+.node-fb-post.view-mode-full .comments .comment-item.child + .comment-item {
+  border-top: none;
 }
 .node-fb-post.view-mode-full .comments .comment-item .actions {
   float: right;
@@ -7619,6 +7642,10 @@ body {
 .node-fb-post.view-mode-full .comments .actions .rate-bad a {
   background: #dc0d17;
   background-image: linear-gradient(#fa3c45, #dc0d17);
+}
+.node-fb-post.view-mode-full .comments .actions .rate-bad a:hover {
+  background: #bd0b14;
+  background-image: linear-gradient(#f91c26, #bd0b14);
 }
 .node-fb-post.view-mode-full .comments .actions .cta a {
   width: 80px;

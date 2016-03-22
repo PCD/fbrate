@@ -22,7 +22,12 @@ body{
     border-color: #435a8b #3c5488 #334c83;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, .2);
     background: #4e69a2;
+    background-image: linear-gradient(#4e69a2, #1748b2);
     border-radius: 2px;
+    &:hover{
+      background: darken(#4e69a2, 6.5%);
+      background-image: linear-gradient(darken(#4e69a2, 6.5%), darken(#1748b2, 6.5%));
+    }
   }
 }
 .node-fb-post.view-mode-full{
@@ -32,6 +37,13 @@ body{
   background: #fff;
   .post{
     padding: 12px 12px 0;
+    .image{
+      width: 470px;
+      img{
+        max-width: 100%;
+        height: auto;
+      }
+    }
   }
   
   .comments{
@@ -47,6 +59,25 @@ body{
       margin: 0 12px;
       padding: 8px 0 4px;
       position: relative;
+      
+      &.child{
+        padding: 8px 0 6px 52px;
+        border-top: none;
+        &:before{
+          content: "";
+          display: block;
+          width: 2px;
+          background: #dcdee3;
+          top: 0;
+          bottom: 0;
+          position: absolute;
+          left: 42px;
+        }
+        &+.comment-item{
+          border-top: none;
+        }
+      }
+      
       .actions{
         float: right;
         width: 170px;
@@ -100,6 +131,10 @@ body{
         a{
           background: #dc0d17;
           background-image: linear-gradient(#fa3c45, #dc0d17);
+          &:hover{
+            background: darken(#dc0d17, 6.5%);
+            background-image: linear-gradient(darken(#fa3c45, 6.5%), darken(#dc0d17, 6.5%));
+          }
         }
       }
       .cta a{
