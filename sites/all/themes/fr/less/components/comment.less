@@ -48,6 +48,9 @@ body{
   
   .comments{
     background: #f6f7f8;
+    .comment-separator{
+      height: 16px;
+    }
     .comment-item{
       &:after{
         content: "";
@@ -59,6 +62,10 @@ body{
       margin: 0 12px;
       padding: 8px 0 4px;
       position: relative;
+      
+      &:hover{
+        background: darken(#f6f7f8, 6.5%);
+      }
       
       &.child{
         padding: 8px 0 6px 52px;

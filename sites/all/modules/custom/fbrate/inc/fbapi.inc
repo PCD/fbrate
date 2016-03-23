@@ -22,10 +22,16 @@ function fbrate_fbapi_fetch_post($url) {
     'app_secret' => $app_secret,
     'default_graph_version' => $app_version,
   ]);
-  if ( !($response = fbrate_fbapi_fetch_post_type($url, 'post', $fb, $accessToken)) ) {
+  $graph_type = '';
+  if ( !($response = fbrate_fbapi_fetch_post_type($url, 'post', $fb, $accessToken, $graph_type)) ) {
     return false;
   }
   $graphNode = $response->getGraphNode();
+  if ( $graph_type == 'video' ) {
+    $graphNode['link'] = 'https://www.facebook.com' . $graphNode['permalink_url'];
+    $graphNode['name'] = $graphNode['description'];
+  }
+  $graphNode['graph_type'] = $graph_type;
   $fb_id = $graphNode['id'];
   
   // Get Likes Count
@@ -45,21 +51,6 @@ function fbrate_fbapi_fetch_post($url) {
   $commentsGraphObject = $response->getGraphEdge();
   $metaData = $commentsGraphObject->getMetaData();
   $graphNode['total_comments'] = $metaData['summary']['total_count'];
-  return $graphNode;
-  
-  $comments = array();
-  $comment_fields = fbrate_api_get_post_comment_fields();
-  $config = array('fields'=>$comment_fields);
-  $i = 1;
-  foreach($commentsGraphObject as $commentGraphObject) {
-    $fb_comment_id = $commentGraphObject['id'];
-    $request = $fb->request('GET', "/{$fb_comment_id}", $config, $accessToken);
-    $response = $fb->getClient()->sendRequest($request);
-    $comments[] = $response->getGraphNode();
-    $i++;
-  }
-  $graphNode['comments'] = $comments;
-  
   return $graphNode;
 }
 
@@ -128,14 +119,22 @@ function fbrate_fb_post_comments_save($node, $postGraphNode) {
 /**
  *
  */
-function fbrate_fbapi_fetch_post_type($url, $type = 'post', $fb, $accessToken) {
+function fbrate_fbapi_fetch_post_type($url, $type = 'post', $fb, $accessToken, &$graph_type) {
   switch($type) {
     case 'post':
       // Get FB Object
       if ( !($fb_id = fbrate_api_get_story_id_from_url($url)) ) {
         return false;
       }
-      $post_fields = fbrate_api_get_post_fields();
+      // Check if its a Video Post
+      $graph_type = 'post';
+      if ( strpos($url, '/videos/') ) {
+        $graph_type = 'video';
+        $post_fields = fbrate_api_get_post_video_fields();
+      } else {
+        $post_fields = fbrate_api_get_post_fields();
+      }
+      
       try{
         $request = $fb->request('GET', "/{$fb_id}", array('fields'=>$post_fields), $accessToken);
         $response = $fb->getClient()->sendRequest($request);
@@ -286,6 +285,10 @@ function fbrate_fb_connect() {
 function fbrate_api_get_post_fields() {
   //return 'id, from, created_time, updated_time, images, picture, link, name, likes';
   return 'id, from, created_time, updated_time, images, link, name';
+}
+
+function fbrate_api_get_post_video_fields() {
+  return 'id, from, created_time, updated_time, picture, embed_html, permalink_url, title, description';
 }
 
 function fbrate_api_get_post_likes_fields() {

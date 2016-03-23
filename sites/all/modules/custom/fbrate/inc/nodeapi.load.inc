@@ -20,5 +20,6 @@ function fbrate_node_load($nodes, $types) {
   require_once drupal_get_path('module', 'fbrate') . '/vendor/autoload.php';
   foreach($records as $record) {
     $nodes[$record->nid]->graphNode = unserialize($record->raw);
+    $nodes[$record->nid]->cids = fbrate_data_comment_load_all_id_by_nid($record->nid);
   }
 }

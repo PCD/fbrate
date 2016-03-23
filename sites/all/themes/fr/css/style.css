@@ -7560,6 +7560,9 @@ body {
 .node-fb-post.view-mode-full .comments {
   background: #f6f7f8;
 }
+.node-fb-post.view-mode-full .comments .comment-separator {
+  height: 16px;
+}
 .node-fb-post.view-mode-full .comments .comment-item {
   border-top: 1px solid #e1e2e3;
   margin: 0 12px;
@@ -7571,6 +7574,9 @@ body {
   display: table;
   height: 0;
   clear: both;
+}
+.node-fb-post.view-mode-full .comments .comment-item:hover {
+  background: #e3e6e9;
 }
 .node-fb-post.view-mode-full .comments .comment-item.child {
   padding: 8px 0 6px 52px;

@@ -9,14 +9,20 @@ $link = $graphNode['link'];
 $total_likes = $graphNode['total_likes'];
 // Get First Image if Any
 $name = check_plain($graphNode['name']);
-if ( isset($graphNode['images'][0]) ) {
+if ( $graphNode['graph_type'] == 'video' ) {
+  $image = $graphNode['embed_html'];
+  $pattern = '/src="([^"]*?)".*?width="([^"]*?)".*?height="([^"]*?)"/msi';
+  preg_match($pattern, $image, $match);
+  $newidth = 720;
+  $newheight = intval(720/intval($match[2])*intval($match[3]));
+  $image = "<iframe src=\"{$match[1]}\" width=\"{$newidth}\" height=\"{$newheight}\" frameborder=\"0\"></iframe>";
+} else if ( isset($graphNode['images'][0]) ) {
   $img = $graphNode['images'][0];
   $image = "<img src=\"{$img['source']}\" width=\"{$img['width']}\" height=\"{$img['height']}\" />";
 }
 
 
 // Comments
-$cids = fbrate_data_comment_load_all_id_by_nid($nid);
 $total_comments = count($cids);
 
 /**
@@ -58,6 +64,7 @@ $total_comments = count($cids);
   <div class="comments">
     <?php foreach($cids as $item):?>
     <div class="comment-item" id="comment-item-<?php print $item->fbrate_comment_id;?>" data-cid="<?php print $item->fbrate_comment_id;?>"></div>
+    <div class="comment-separator" id="comment-separator-<?php print $item->fbrate_comment_id;?>"></div>
     <?php endforeach;?>
   </div>
   <?php endif;?>
