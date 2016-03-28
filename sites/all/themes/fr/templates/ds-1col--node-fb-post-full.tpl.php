@@ -51,12 +51,20 @@ $total_comments = count($cids);
       <?php print $image;?>
     </div>
     
-    <div class="total_likes">
-      <?php print number_format($total_likes);?> Me Gusta
-    </div>
-    
-    <div class="total_comments">
-      <?php print number_format($total_comments);?> Comentarios
+    <div class="post-bottom">
+      <div class="post-data">
+        <div class="total_likes">
+          <?php print number_format($total_likes);?> Me Gusta
+        </div>
+        
+        <div class="total_comments">
+          <?php print number_format($total_comments);?> Comentarios
+        </div>
+      </div>
+      
+      <div class="post-actions">
+        <label id="label-show-rated-comments" for="show-rated-comments"><input type="checkbox" id="show-rated-comments" value="1" /> Mostrar Comentarios Calificados</label>
+      </div>
     </div>
   </div>
   

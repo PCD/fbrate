@@ -1,5 +1,6 @@
 <?php
 include_once('inc/data.comment.inc');
+include_once('inc/data.comment.rating.inc');
 include_once('inc/data.post.inc');
 include_once('inc/fbapi.inc');
 include_once('inc/form.inc');

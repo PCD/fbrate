@@ -7557,6 +7557,28 @@ body {
   max-width: 100%;
   height: auto;
 }
+.node-fb-post.view-mode-full .post .post-bottom .post-data {
+  float: left;
+  width: 50%;
+}
+.node-fb-post.view-mode-full .post .post-bottom .post-data .total_likes,
+.node-fb-post.view-mode-full .post .post-bottom .post-data .total_comments {
+  float: left;
+  margin-right: 10px;
+}
+.node-fb-post.view-mode-full .post .post-bottom .post-actions {
+  float: right;
+  width: 50%;
+}
+.node-fb-post.view-mode-full .post .post-bottom .post-actions #label-show-rated-comments {
+  float: right;
+}
+.node-fb-post.view-mode-full .post .post-bottom:after {
+  content: "";
+  display: table;
+  height: 0;
+  clear: both;
+}
 .node-fb-post.view-mode-full .comments {
   background: #f6f7f8;
 }
@@ -7639,6 +7661,31 @@ body {
   background: url('../images/fb-icons.png') no-repeat -208px -422px;
   background-size: 500px 440px;
 }
+.node-fb-post.view-mode-full .comments .comment-item .actions .rating {
+  display: none;
+  text-align: center;
+  font-size: 12px;
+  line-height: 22px;
+  font-family: helvetica, arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: #1748b2;
+  font-weight: bold;
+}
+.node-fb-post.view-mode-full .comments .comment-item.rate-done {
+  display: none;
+}
+.node-fb-post.view-mode-full .comments .comment-item.rate-done + .comment-separator {
+  display: none;
+}
+.node-fb-post.view-mode-full .comments .comment-item.rate-done.rate-bad .rating {
+  color: #dc0d17;
+}
+.node-fb-post.view-mode-full .comments .comment-item.rate-done .actions .cta {
+  display: none;
+}
+.node-fb-post.view-mode-full .comments .comment-item.rate-done .actions .rating {
+  display: block;
+}
 .node-fb-post.view-mode-full .comments .actions .rate-good {
   float: left;
 }
@@ -7655,4 +7702,10 @@ body {
 }
 .node-fb-post.view-mode-full .comments .actions .cta a {
   width: 80px;
+}
+.node-fb-post.view-mode-full .comments.show-rated-comments .comment-item.rate-done {
+  display: block;
+}
+.node-fb-post.view-mode-full .comments.show-rated-comments .comment-item.rate-done + .comment-separator {
+  display: block;
 }

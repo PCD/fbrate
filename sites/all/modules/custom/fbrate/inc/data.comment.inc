@@ -27,22 +27,52 @@ function fbrate_data_comment_update($fbrate_comment_id, $graphNode) {
  * Search for an Existing comment Record.
  */
 function fbrate_data_comment_load($fb_id) {
-  return db_select('fbrate_comment', 'c')
-  ->fields('c')
-  ->condition('fb_id', $fb_id, '=')
-  ->execute()
-  ->fetchAssoc();
+  $query = db_select('fbrate_comment', 'c');
+  $query->leftJoin('fbrate_comment_rating', 'r', 'c.fbrate_comment_id = r.fbrate_comment_id');
+  $query->addField('c', 'fbrate_comment_id');
+  $query->addField('c', 'nid');
+  $query->addField('c', 'timestamp');
+  $query->addField('c', 'status');
+  $query->addField('c', 'fb_id');
+  $query->addField('c', 'date');
+  $query->addField('c', 'updated');
+  $query->addField('c', 'raw');
+  // Rate fields
+  $query->addField('r', 'uid', 'rate_uid');
+  $query->addField('r', 'rate', 'rate_value');
+  $query->addField('r', 'timestamp', 'rate_timestamp');
+  $query->addField('r', 'muid', 'rate_muid');
+  $query->addField('r', 'status', 'rate_status');
+  $query->addField('r', 'mtimestamp', 'rate_mtimestamp');
+  $query->condition('fb_id', $fb_id, '=');
+  $results = $query->execute();
+  return $results->fetchAssoc();
 }
 
 /**
  * Search for an Existing comment Record.
  */
 function fbrate_data_comment_load_by_cid($cid) {
-  return db_select('fbrate_comment', 'c')
-  ->fields('c')
-  ->condition('fbrate_comment_id', $cid, '=')
-  ->execute()
-  ->fetchAssoc();
+  $query = db_select('fbrate_comment', 'c');
+  $query->leftJoin('fbrate_comment_rating', 'r', 'c.fbrate_comment_id = r.fbrate_comment_id');
+  $query->addField('c', 'fbrate_comment_id');
+  $query->addField('c', 'nid');
+  $query->addField('c', 'timestamp');
+  $query->addField('c', 'status');
+  $query->addField('c', 'fb_id');
+  $query->addField('c', 'date');
+  $query->addField('c', 'updated');
+  $query->addField('c', 'raw');
+  // Rate fields
+  $query->addField('r', 'uid', 'rate_uid');
+  $query->addField('r', 'rate', 'rate_value');
+  $query->addField('r', 'timestamp', 'rate_timestamp');
+  $query->addField('r', 'muid', 'rate_muid');
+  $query->addField('r', 'status', 'rate_status');
+  $query->addField('r', 'mtimestamp', 'rate_mtimestamp');
+  $query->condition('c.fbrate_comment_id', $cid, '=');
+  $results = $query->execute();
+  return $results->fetchAssoc();
 }
 
 /**

@@ -5,10 +5,11 @@
 function fbrate_menu() {
   $items = array();
   $items['admin/fbrate/import/post'] = array(
-    'title' => 'Import Post', 
+    'title' => 'Importar FB Post', 
     'page callback' => 'fbrate_menu_import_post_form', 
     'access arguments' => array('Use import post form'), 
-    'type' => MENU_CALLBACK, 
+    'type' => MENU_NORMAL_ITEM, 
+    'menu_name' => 'main-menu', 
   );
   $items['fbrate/login'] = array(
     'title' => 'Login Callback', 
@@ -35,6 +36,18 @@ function fbrate_menu() {
     'page callback' => 'fbrate_menu_comment_load', 
     'page arguments' => array(2), 
     'access arguments' => array('Read Post Comments'), 
+    'type' => MENU_CALLBACK, 
+  );
+  $items['fbrate/comment/%/good'] = array(
+    'page callback' => 'fbrate_menu_comment_rating', 
+    'page arguments' => array(2, '100'), 
+    'access arguments' => array('Rate Comments'), 
+    'type' => MENU_CALLBACK, 
+  );
+  $items['fbrate/comment/%/bad'] = array(
+    'page callback' => 'fbrate_menu_comment_rating', 
+    'page arguments' => array(2, '0'), 
+    'access arguments' => array('Rate Comments'), 
     'type' => MENU_CALLBACK, 
   );
   return $items;
@@ -108,10 +121,39 @@ function fbrate_menu_comment_load($cid) {
     'like_count' => $graphNode['like_count'], 
     'message' => $graphNode['message'], 
     'parent' => 0, 
+    'rate_status' => (is_null($data['rate_uid'])?0:1), 
+    'rate' => array(
+      'uid' => $data['rate_uid'], 
+      'value' => $data['rate_value'], 
+      'timestamp' => $data['rate_timestamp'], 
+      'muid' => $data['rate_muid'], 
+      'status' => $data['rate_status'], 
+      'mtimestamp' => $data['rate_mtimestamp'], 
+    ), 
   );
   if ( isset($graphNode['parent']) ) {
     $return['parent'] = $graphNode['parent']['id'];
   }
+  echo drupal_json_encode($return);
+  exit;
+}
+
+/**
+ * Rate Comments.
+ */
+function fbrate_menu_comment_rating($cid, $rating = '0') {
+  global $user;
+  $luser = user_load($user->uid);
+  $params = array(
+    'fbrate_comment_id' => $cid, 
+    'uid' => $luser->uid, 
+    'rate' => $rating, 
+    'timestamp' => time(), 
+  );
+  fbrate_data_comment_rating_save($params);
+  $return = array(
+    'valid' => 1, 
+  );
   echo drupal_json_encode($return);
   exit;
 }

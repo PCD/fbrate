@@ -72,7 +72,7 @@ function fbrate_schema() {
     'foreign keys' => array(
       'nid' => array(
         'table' => 'node', 
-        'columns' => array('nid' => 'nide'), 
+        'columns' => array('nid' => 'nid'), 
       ), 
     ), 
   );
@@ -132,7 +132,74 @@ function fbrate_schema() {
     'foreign keys' => array(
       'nid' => array(
         'table' => 'node', 
-        'columns' => array('nid' => 'nide'), 
+        'columns' => array('nid' => 'nid'), 
+      ), 
+    ), 
+  );
+  
+  $schema['fbrate_comment_rating'] = array(
+    'description' => 'This table stores a fb comment rating.', 
+    'fields' => array(
+      'fbrate_comment_id' => array(
+        'description' => 'The primary identifier for fbrate comment entry.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ), 
+      'uid' => array(
+        'description' => 'The user id performing the rating.', 
+        'type' => 'int', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE, 
+      ), 
+      'rate' => array(
+        'description' => 'The rate value given to the comment.', 
+        'type' => 'int', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE, 
+        'default' => 0, 
+      ), 
+      'timestamp' => array(
+        'description' => 'The time the rate was done.', 
+        'type' => 'int', 
+        'unsigned' => TRUE, 
+        'not null' => TRUE, 
+      ), 
+      'muid' => array(
+        'description' => 'The moderator user id approving or not.', 
+        'type' => 'int', 
+        'unsigned' => TRUE, 
+      ), 
+      'status' => array(
+        'description' => '0 for rejected, 1 for approved.', 
+        'type' => 'int', 
+        'unsigned' => TRUE, 
+      ), 
+      'mtimestamp' => array(
+        'description' => 'The time the rate was moderated.', 
+        'type' => 'int', 
+        'unsigned' => TRUE, 
+      ), 
+    ), 
+    'primary key' => array('fbrate_comment_id'), 
+    'indexes' => array(
+      'rate' => array('rate'), 
+      'timestamp' => array('timestamp'), 
+      'status' => array('status'), 
+      'mtimestamp' => array('mtimestamp'), 
+    ), 
+    'foreign keys' => array(
+      'fbrate_comment_id' => array(
+        'table' => 'fbrate_comment', 
+        'columns' => array('fbrate_comment_id' => 'fbrate_comment_id'), 
+      ), 
+      'uid' => array(
+        'table' => 'users', 
+        'columns' => array('uid' => 'uid'), 
+      ), 
+      'muid' => array(
+        'table' => 'users', 
+        'columns' => array('muid' => 'uid'), 
       ), 
     ), 
   );

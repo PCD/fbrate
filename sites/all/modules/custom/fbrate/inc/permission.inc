@@ -16,5 +16,13 @@ function fbrate_permission() {
       'title' => 'Read Post Comments', 
       'description' => 'Read Post Comments', 
     ), 
+    'Rate Comments' => array(
+      'title' => 'Rate Comments', 
+      'description' => 'Rate Comments', 
+    ), 
+    'Moderate Ratings' => array(
+      'title' => 'Moderate Ratings', 
+      'description' => 'Moderate Ratings', 
+    ), 
   );
 }
