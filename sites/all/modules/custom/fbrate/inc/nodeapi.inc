@@ -39,9 +39,15 @@ function fbrate_fb_post_node_save($graphNode) {
     $node->changed = time();
   }
   
+  
   $node->title = substr($graphNode['name'], 0, 32);
-  //$node->field_publication_date[LANGUAGE_NONE][0]['value'] = date('Y-m-d', $raw['date']);
   $node->field_fb_post_url[LANGUAGE_NONE][0]['url'] = $graphNode['link'];
+  $tz = $graphNode['created_time']->getTimezone();
+  $node->field_date[LANGUAGE_NONE][0]['value'] = $graphNode['created_time']->getTimestamp();
+  $node->field_date[LANGUAGE_NONE][0]['timezone'] = $tz->getName();
+  $node->field_date[LANGUAGE_NONE][0]['offset'] = $graphNode['created_time']->getOffset();
+  $node->field_date[LANGUAGE_NONE][0]['timezone_db'] = $tz->getName();
+  $node->field_date[LANGUAGE_NONE][0]['date_type'] = 'datestamp';
   
   try{
     $node = node_submit($node);

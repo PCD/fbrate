@@ -7672,10 +7672,10 @@ body {
   font-weight: bold;
 }
 .node-fb-post.view-mode-full .comments .comment-item.rate-done {
-  display: none;
+  display: block;
 }
 .node-fb-post.view-mode-full .comments .comment-item.rate-done + .comment-separator {
-  display: none;
+  display: block;
 }
 .node-fb-post.view-mode-full .comments .comment-item.rate-done.rate-bad .rating {
   color: #dc0d17;
@@ -7704,8 +7704,8 @@ body {
   width: 80px;
 }
 .node-fb-post.view-mode-full .comments.show-rated-comments .comment-item.rate-done {
-  display: block;
+  display: none;
 }
 .node-fb-post.view-mode-full .comments.show-rated-comments .comment-item.rate-done + .comment-separator {
-  display: block;
+  display: none;
 }

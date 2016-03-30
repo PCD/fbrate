@@ -63,7 +63,7 @@ $total_comments = count($cids);
       </div>
       
       <div class="post-actions">
-        <label id="label-show-rated-comments" for="show-rated-comments"><input type="checkbox" id="show-rated-comments" value="1" /> Mostrar Comentarios Calificados</label>
+        <label id="label-show-rated-comments" for="show-rated-comments"><input type="checkbox" id="show-rated-comments" value="1" /> Ocultar Comentarios Calificados</label>
       </div>
     </div>
   </div>

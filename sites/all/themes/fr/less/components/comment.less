@@ -164,9 +164,9 @@ body{
         font-weight: bold;
       }
       &.rate-done{
-        display: none;
+        display: block;
         &+.comment-separator{
-          display: none;
+          display: block;
         }
         &.rate-bad .rating{
           color: #dc0d17;
@@ -203,9 +203,9 @@ body{
     
     &.show-rated-comments{
       .comment-item.rate-done{
-        display: block;
+        display: none;
         &+.comment-separator{
-          display: block;
+          display: none;
         }
       }
     }
