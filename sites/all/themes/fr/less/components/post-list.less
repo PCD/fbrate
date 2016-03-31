@@ -1,0 +1,50 @@
+.node-fb-post.node-teaser{
+  width: 200px;
+  height: 200px;
+  margin: 10px;
+  float: left;
+  overflow: hidden;
+  
+  .image{
+    position: relative;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    img{
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      height: 100%;
+      width: auto;
+      -webkit-transform: translate(-50%,-50%);
+      -ms-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+      &.portrait{
+        width: 100%;
+        height: auto;
+      }
+    }
+  }
+  .stats{
+    position: absolute;
+    bottom: 0;
+    height: 40px;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+  }
+  .tooltip{
+    display: none;
+  }
+  a.link{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: block;
+    text-align: left;
+    text-indent: -9999px;
+  }
+}

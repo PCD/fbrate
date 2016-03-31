@@ -7709,3 +7709,52 @@ body {
 .node-fb-post.view-mode-full .comments.show-rated-comments .comment-item.rate-done + .comment-separator {
   display: none;
 }
+.node-fb-post.node-teaser {
+  width: 200px;
+  height: 200px;
+  margin: 10px;
+  float: left;
+  overflow: hidden;
+}
+.node-fb-post.node-teaser .image {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+}
+.node-fb-post.node-teaser .image img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 100%;
+  width: auto;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+.node-fb-post.node-teaser .image img.portrait {
+  width: 100%;
+  height: auto;
+}
+.node-fb-post.node-teaser .stats {
+  position: absolute;
+  bottom: 0;
+  height: 40px;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+}
+.node-fb-post.node-teaser .tooltip {
+  display: none;
+}
+.node-fb-post.node-teaser a.link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: block;
+  text-align: left;
+  text-indent: -9999px;
+}

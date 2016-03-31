@@ -9,6 +9,15 @@ function fbrate_import_post_form($form, &$form_state) {
     '#title' => t('FB Post URL'), 
     '#required' => TRUE, 
   );
+  $attach_form = array();
+  $node = new stdClass();
+  $node->type = 'fb_post';
+  field_attach_form('node', $node, $attach_form, $form_state, NULL, array('field_assigned_to' => 'field_assigned_to'));
+  
+  
+  $attach_form['field_assigned_to'][LANGUAGE_NONE]['#title'] = t('Assign To');
+  $form['assigned_to'] = $attach_form['field_assigned_to'];
+  
   $form['actions'] = array(
     '#type' => 'actions', 
     'submit' => array(
@@ -28,6 +37,8 @@ function fbrate_import_post_form_submit(&$form, &$form_state) {
   if ( !($graphNode = fbrate_fbapi_fetch_post($url)) ) {
     return false;
   }
+  
+  $graphNode['assigned_to'] = $val['assigned_to'][LANGUAGE_NONE][0]['uid'];
   
   // Save Node
   if ( !($node = fbrate_fb_post_node_save($graphNode)) ) {

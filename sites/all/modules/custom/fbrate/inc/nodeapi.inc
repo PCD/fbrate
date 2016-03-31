@@ -48,6 +48,9 @@ function fbrate_fb_post_node_save($graphNode) {
   $node->field_date[LANGUAGE_NONE][0]['offset'] = $graphNode['created_time']->getOffset();
   $node->field_date[LANGUAGE_NONE][0]['timezone_db'] = $tz->getName();
   $node->field_date[LANGUAGE_NONE][0]['date_type'] = 'datestamp';
+  if ( isset($graphNode['assigned_to']) ) {
+    $node->field_assigned_to[LANGUAGE_NONE][0]['uid'] = $graphNode['assigned_to'];
+  }
   
   try{
     $node = node_submit($node);
